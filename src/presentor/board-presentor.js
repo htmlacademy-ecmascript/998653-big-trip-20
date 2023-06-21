@@ -109,13 +109,11 @@ export default class BoardPresentor {
           await this.#pointsModel.updatePoint(updateType, update);
         } catch (err) {
           this.#pointPresentors.get(update.id).setAborting();
-          this.#uiBlocker.unblock();
-          return Promise.reject();
         }
         break;
 
       case UserAction.ADD_POINT:
-        this.#newPointPresentor.setSaving();
+        this.#newPointPresentor.get(update.id).setSaving();
         try {
           await this.#pointsModel.addPoint(updateType, update);
         } catch (err) {
