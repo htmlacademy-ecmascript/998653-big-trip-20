@@ -3,7 +3,6 @@ import { RenderPosition, render, remove, replace } from '../framework/render.js'
 
 export default class TripInfoPresentor {
   #container = null;
-
   #pointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
@@ -18,6 +17,7 @@ export default class TripInfoPresentor {
 
   init() {
     this.pointsModel.addObserver(this.#modelEventHandler);
+    this.#render();
   }
 
   #modelEventHandler = () => {

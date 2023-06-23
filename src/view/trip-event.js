@@ -20,12 +20,13 @@ function createEventTemplate(point = POINT_EMPTY, pointDestination, pointOffers)
   const { basePrice, dateFrom, dateTo, isFavorite, type, offers } = point;
   const { name } = pointDestination;
 
-  return /*html*/ (`<li class="trip-events__item">
-  <div class="event">
-    <time class="event__date" datetime="${dateFrom}">${humanizePointDueDate(dateFrom)}</time>
-    <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
-    </div>
+  return /*html*/ (`
+    <li class="trip-events__item">
+    <div class="event">
+      <time class="event__date" datetime="${dateFrom}">${humanizePointDueDate(dateFrom)}</time>
+      <div class="event__type">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
+      </div>
     <h3 class="event__title">${type} ${name}</h3>
     <div class="event__schedule">
       <p class="event__time">
@@ -95,5 +96,4 @@ export default class TripEventView extends AbstractView {
     evt.preventDefault();
     this.#onfavoriteClick();
   };
-
 }

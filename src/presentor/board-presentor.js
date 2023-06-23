@@ -18,7 +18,6 @@ const TimeLimit = {
   UPPER_LIMIT: 1000
 };
 
-
 export default class BoardPresentor {
   #tripMainContainer = null;
   #tripEventsContainer = null;
@@ -108,15 +107,18 @@ export default class BoardPresentor {
           await this.#pointsModel.updatePoint(updateType, update);
         } catch (err) {
           this.#pointPresentors.get(update.id).setAborting();
+          return Promise.reject();
         }
         break;
 
       case UserAction.ADD_POINT:
-        this.#newPointPresentor.get(update.id).setSaving();
+        this.#newPointPresentor.setSaving();
         try {
           await this.#pointsModel.addPoint(updateType, update);
         } catch (err) {
           this.#newPointPresentor.setAborting();
+          this.#uiBlocker.unblock();
+          return Promise.reject();
         }
         break;
 
@@ -124,6 +126,9 @@ export default class BoardPresentor {
         this.#pointPresentors.get(update.id).setDeleting();
         try {
           await this.#pointsModel.deletePoint(updateType, update);
+          if (this.points.length === 0) {
+            this.#renderMessage();
+          }
         } catch (err) {
           this.#pointPresentors.get(update.id).setAborting();
         }
@@ -156,7 +161,6 @@ export default class BoardPresentor {
         remove(this.#loadingComponent);
         this.#onDataLoad();
         break;
-
     }
   };
 
@@ -234,7 +238,7 @@ export default class BoardPresentor {
   }
 
   #renderNoPoint() {
-    if (this.#points.length === 0) {
+    if (this.#points.length === 0 && !this.#isCreating) {
       this.#renderMessage();
     }
   }
@@ -279,6 +283,7 @@ export default class BoardPresentor {
     this.#filterModel.setFilter(FilterTypes.EVERYTHING);
     this.#newPointButton.setDisabled(true);
     this.#newPointPresentor.init();
+    remove(this.#messageComponent);
   };
 
   #newPointDestroyHandler = (isCanceled) => {
