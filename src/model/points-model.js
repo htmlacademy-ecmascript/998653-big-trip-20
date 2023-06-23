@@ -1,5 +1,5 @@
 import Observable from '../framework/observable.js';
-import { UpdateType } from '../constants/const.js';
+import { UpdateType } from '../constants/constants.js';
 
 export default class PointsModel extends Observable {
   #points = [];
@@ -24,6 +24,8 @@ export default class PointsModel extends Observable {
         this.#destinationsModel.init(),
       ]);
       const points = await this.#service.points;
+      this.#offersModel.init();
+      this.#destinationsModel.init();
       this.#points = points.map(this.#adaptToClient);
     } catch(err) {
       this.#points = [];
